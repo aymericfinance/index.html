@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0E0D0C">
+<meta name="description" content="Lera — UGC & Reels Creator for service and lifestyle brands. Geneva, Annecy & remote.">
+<title>Lera · UGC & Reels Creator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --bg:       #0E0D0C;
+  --surface:  #161412;
+  --card:     #1D1A17;
+  --border:   rgba(255,255,255,0.07);
+  --cream:    #F5EFE6;
+  --sand:     #C9AB87;
+  --sand-dim: rgba(201,171,135,0.18);
+  --text:     #EDE8E0;
+  --muted:    rgba(237,232,224,0.45);
+  --green:    #7A9E72;
+  --r:        14px;
+  --safe-b:   env(safe-area-inset-bottom, 0px);
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;border:none;background:none;cursor:pointer}
+
+/* ─── SCROLLBAR (desktop) ────────────────────────────── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--sand);border-radius:2px}
+
+/* ─── NAV ────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+  transition:background 0.35s,backdrop-filter 0.35s,border-color 0.35s;
+  border-bottom:1px solid transparent;
+}
+.nav.solid{
+  background:rgba(14,13,12,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom-color:var(--border);
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:400;
+  letter-spacing:0.04em;
+  color:var(--cream);
+  flex-shrink:0;
+}
+.nav-logo span{color:var(--sand)}
+.nav-btn{
+  background:var(--sand);
+  color:#0E0D0C;
+  padding:9px 16px;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  border-radius:40px;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity 0.18s,transform 0.18s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.nav-btn:active{opacity:0.8;transform:scale(0.97)}
+
+/* ─── LANG SWITCHER ──────────────────────────────────── */
+.lang-switcher{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:40px;
+  padding:4px;
+}
+.lang-btn{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;
+  border-radius:50%;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--muted);
+  -webkit-tap-highlight-color:transparent;
+  transition:color 0.2s;
+  cursor:pointer;
+  border:none;background:none;
+  font-family:'DM Sans',sans-serif;
+}
+.lang-btn.active{
+  background:var(--sand);
+  color:#0E0D0C;
+}
+.lang-btn:not(.active):hover{color:var(--text)}
+/* flag emoji visible on all */
+.lang-btn .flag{
+  font-size:16px;
+  line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Tooltip on hover (desktop) */
+.lang-btn::after{
+  content:attr(data-name);
+  position:absolute;
+  bottom:-28px;left:50%;transform:translateX(-50%);
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-size:10px;font-weight:300;letter-spacing:0.1em;
+  padding:3px 8px;border-radius:4px;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.15s;
+}
+.lang-btn:hover::after{opacity:1}
+@media(max-width:767px){.lang-btn::after{display:none}}
+
+/* ─── STICKY CTA ─────────────────────────────────────── */
+.bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:299;
+  padding:12px 16px calc(10px + var(--safe-b));
+  background:rgba(14,13,12,0.96);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transform:translateY(110%);
+  transition:transform 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.bar.show{transform:translateY(0)}
+.bar-copy{
+  display:flex;flex-direction:column;gap:2px;
+  overflow:hidden;
+}
+.bar-title{
+  font-size:13px;font-weight:500;color:var(--cream);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.bar-sub{
+  font-size:11px;font-weight:300;color:var(--muted);
+  white-space:nowrap;
+}
+.bar-btn{
+  background:var(--sand);color:#0E0D0C;
+  padding:12px 22px;
+  font-size:11px;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  border-radius:40px;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity 0.18s;
+}
+.bar-btn:active{opacity:0.8}
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero{
+  min-height:100svh;
+  padding-top:56px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+
+/* full-bleed gradient bg */
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 70% 0%, rgba(201,171,135,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 60% at 20% 100%, rgba(201,171,135,0.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.hero-photo{
+  width:100%;
+  height:58vw;min-height:240px;max-height:420px;
+  position:relative;
+  flex-shrink:0;
+  background:var(--card);
+  overflow:hidden;
+}
+.hero-photo img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:top center;
+}
+.hero-photo-placeholder{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+}
+.hero-photo-placeholder .icon{font-size:40px;opacity:0.18}
+.hero-photo-placeholder .hint{
+  font-size:10px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--muted);
+}
+/* photo gradient fade into bg */
+.hero-photo::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:55%;
+  background:linear-gradient(to top, var(--bg) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+/* rotating badge */
+.badge{
+  position:absolute;bottom:16px;right:16px;z-index:2;
+  width:72px;height:72px;
+  border-radius:50%;
+  background:var(--sand);
+  overflow:hidden;
+  flex-shrink:0;
+}
+.badge-ring{animation:spin 14s linear infinite;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge-center{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+
+/* live chip */
+.live-chip{
+  position:absolute;top:16px;left:16px;z-index:2;
+  display:flex;align-items:center;gap:7px;
+  background:rgba(14,13,12,0.72);
+  backdrop-filter:blur(8px);
+  padding:6px 12px;border-radius:40px;
+  font-size:11px;font-weight:400;letter-spacing:0.04em;
+  color:var(--cream);
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  animation:pulse 1.8s ease infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(122,158,114,0.5)}
+  50%{box-shadow:0 0 0 6px rgba(122,158,114,0)}
+}
+
+/* hero text block */
+.hero-body{
+  padding:4px 22px 110px;
+  flex:1;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  position:relative;z-index:1;
+}
+.hero-kicker{
+  display:flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:400;letter-spacing:0.28em;
+  text-transform:uppercase;color:var(--sand);
+  margin-bottom:16px;
+}
+.hero-kicker::before{
+  content:'';width:24px;height:1px;background:var(--sand);flex-shrink:0;
+}
+.hero-h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,16vw,88px);
+  font-weight:400;line-height:0.9;
+  letter-spacing:-0.02em;
+  margin-bottom:6px;
+  color:var(--cream);
+}
+.hero-h1 em{font-style:italic;color:var(--sand)}
+.hero-tagline{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-style:italic;font-weight:400;
+  color:var(--muted);
+  margin-bottom:20px;line-height:1.45;
+}
+.hero-desc{
+  font-size:14px;font-weight:300;line-height:1.75;
+  color:var(--muted);
+  margin-bottom:28px;
+  max-width:340px;
+}
+.hero-desc strong{color:var(--text);font-weight:400}
+
+/* stats row */
+.stats{
+  display:flex;
+  padding:20px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin-bottom:28px;
+}
+.stat{flex:1;padding:0 14px;position:relative}
+.stat:first-child{padding-left:0}
+.stat+.stat::before{
+  content:'';position:absolute;left:0;top:5%;bottom:5%;
+  width:1px;background:var(--border);
+}
+.stat-n{
+  font-family:'Playfair Display',serif;
+  font-size:34px;font-weight:700;line-height:1;
+  color:var(--cream);
+}
+.stat-l{
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);margin-top:4px;
+}
+
+/* hero ctas */
+.hero-ctas{display:flex;flex-direction:column;gap:10px}
+.cta-primary{
+  display:block;text-align:center;
+  background:var(--sand);color:#0E0D0C;
+  padding:17px 24px;
+  font-size:12px;font-weight:500;
+  letter-spacing:0.16em;text-transform:uppercase;
+  border-radius:40px;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity 0.18s,transform 0.18s;
+}
+.cta-primary:active{opacity:0.8;transform:scale(0.98)}
+.cta-ghost{
+  display:block;text-align:center;
+  border:1px solid var(--border);color:var(--muted);
+  padding:16px 24px;
+  font-size:12px;font-weight:400;
+  letter-spacing:0.14em;text-transform:uppercase;
+  border-radius:40px;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color 0.2s,color 0.2s;
+}
+.cta-ghost:active{border-color:var(--sand);color:var(--sand)}
+
+/* ─── TICKER ─────────────────────────────────────────── */
+.ticker{
+  background:var(--sand);
+  padding:12px 0;overflow:hidden;white-space:nowrap;
+}
+.ticker-track{
+  display:inline-flex;
+  animation:ticker 20s linear infinite;
+}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:18px;
+  padding:0 18px;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:#0E0D0C;
+}
+.ticker-sep{opacity:0.5;font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── SECTION BASE ───────────────────────────────────── */
+.s{padding:64px 22px}
+.s-dark{padding:64px 22px;background:var(--surface)}
+.s-card{padding:64px 22px;background:var(--card)}
+.label{
+  font-size:9px;letter-spacing:0.38em;text-transform:uppercase;
+  color:var(--sand);margin-bottom:12px;
+}
+.h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,10vw,56px);
+  font-weight:400;line-height:1.0;
+  letter-spacing:-0.01em;
+  margin-bottom:24px;color:var(--cream);
+}
+.h2 em{font-style:italic;color:var(--sand)}
+.body{
+  font-size:14px;font-weight:300;line-height:1.8;
+  color:var(--muted);
+}
+.divider{height:1px;background:var(--border);margin:32px 0}
+
+/* ─── SOCIAL PROOF STRIP ─────────────────────────────── */
+.proof{
+  background:var(--surface);
+  padding:28px 22px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  flex-wrap:wrap;
+}
+.proof-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.proof-n{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:700;color:var(--cream);line-height:1;
+}
+.proof-l{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+.proof-sep{width:1px;height:36px;background:var(--border);margin:0 12px}
+
+/* ─── WHAT I DO ──────────────────────────────────────── */
+/* Big visual cards with icon + copy */
+.what-grid{display:flex;flex-direction:column;gap:2px;margin-top:32px}
+.what-card{
+  background:var(--card);
+  padding:32px 24px;
+  position:relative;overflow:hidden;
+}
+.what-card::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--sand);opacity:0.4;
+}
+.what-num{
+  font-family:'Playfair Display',serif;
+  font-size:48px;font-weight:700;
+  color:rgba(201,171,135,0.1);
+  line-height:1;margin-bottom:12px;
+}
+.what-title{
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:400;
+  color:var(--cream);margin-bottom:4px;
+}
+.what-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--sand-dim);
+  border:1px solid rgba(201,171,135,0.2);
+  color:var(--sand);
+  font-size:10px;font-weight:400;letter-spacing:0.16em;text-transform:uppercase;
+  padding:5px 12px;border-radius:40px;
+  margin-bottom:16px;
+}
+.what-desc{font-size:13px;font-weight:300;line-height:1.75;color:var(--muted);margin-bottom:20px}
+.what-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.what-list li{
+  font-size:13px;font-weight:300;line-height:1.6;color:var(--muted);
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.what-list li:first-child{border-top:1px solid var(--border)}
+.what-list li::before{content:'→';color:var(--sand);flex-shrink:0;margin-top:1px}
+
+/* ─── PACKAGES ───────────────────────────────────────── */
+.pkg-cards{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.pkg{
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:28px 22px;
+  position:relative;
+  transition:border-color 0.25s;
+}
+.pkg:active{border-color:var(--sand)}
+.pkg.hot{
+  border-color:rgba(201,171,135,0.45);
+  background:rgba(201,171,135,0.04);
+}
+.pkg-best{
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  background:var(--sand);color:#0E0D0C;
+  font-size:9px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;
+  padding:4px 14px;border-radius:0 0 8px 8px;
+  white-space:nowrap;
+}
+.pkg-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.pkg-name{
+  font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--sand);
+  margin-bottom:10px;
+}
+.pkg-price{
+  font-family:'Playfair Display',serif;
+  font-size:48px;font-weight:700;color:var(--cream);line-height:1;
+}
+.pkg-from{font-size:10px;color:var(--muted);letter-spacing:0.06em;display:block;margin-bottom:3px}
+.pkg-vids{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--sand-dim);
+  border:1px solid rgba(201,171,135,0.15);
+  color:var(--sand);
+  font-size:11px;font-weight:400;
+  padding:5px 12px;border-radius:40px;
+  margin-top:6px;
+}
+.pkg-desc{font-size:13px;font-weight:300;line-height:1.65;color:var(--muted);margin:16px 0 20px}
+.pkg-cta{
+  display:block;text-align:center;
+  border:1px solid var(--border);
+  color:var(--cream);
+  padding:14px;
+  font-size:11px;font-weight:400;letter-spacing:0.16em;text-transform:uppercase;
+  border-radius:40px;
+  -webkit-tap-highlight-color:transparent;
+  transition:background 0.2s,border-color 0.2s,color 0.2s;
+}
+.pkg-cta:active,.pkg.hot .pkg-cta{
+  background:var(--sand);border-color:var(--sand);color:#0E0D0C;
+}
+.pkg-note{
+  text-align:center;
+  font-family:'Playfair Display',serif;
+  font-size:15px;font-style:italic;
+  color:var(--muted);
+  padding-top:24px;
+  border-top:1px solid var(--border);
+  line-height:1.55;
+}
+
+/* ─── PORTFOLIO ──────────────────────────────────────── */
+.portfolio{padding:64px 0}
+.portfolio .section-head{padding:0 22px;margin-bottom:8px}
+.swipe-hint{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);padding:0 22px;margin-bottom:24px;
+}
+.swipe-hint svg{animation:nudge 1.6s ease infinite}
+@keyframes nudge{
+  0%,100%{transform:translateX(0);opacity:0.35}
+  55%{transform:translateX(5px);opacity:1}
+}
+.reel-track{
+  display:flex;gap:12px;
+  padding:4px 22px 8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.reel-track::-webkit-scrollbar{display:none}
+.reel{
+  flex-shrink:0;
+  width:44vw;max-width:180px;
+  scroll-snap-align:start;
+}
+.reel-frame{
+  background:var(--card);
+  border-radius:18px;
+  padding:5px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.45);
+  transition:transform 0.3s;
+}
+.reel-screen{
+  border-radius:14px;
+  aspect-ratio:9/16;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+}
+/* niche screens */
+.n-fashion {background:linear-gradient(170deg,#3D2B1F,#7A5C3F,#C4A882)}
+.n-hair    {background:linear-gradient(170deg,#2B1F18,#6B4F38,#B8967A)}
+.n-skin1   {background:linear-gradient(170deg,#2A2420,#5A4A40,#9E8A7A)}
+.n-skin2   {background:linear-gradient(170deg,#1E1C1A,#4A3E38,#8E7E72)}
+.n-jewel   {background:linear-gradient(170deg,#0A0A0C,#2A2830,#5C5870)}
+.n-floral  {background:linear-gradient(170deg,#1A231A,#3A5034,#6A8060)}
+.reel-icon{font-size:22px;opacity:0.55;position:relative;z-index:1}
+.reel-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.65) 0%,transparent 55%);
+}
+.reel-label{
+  position:absolute;bottom:9px;left:0;right:0;
+  text-align:center;
+  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:rgba(255,255,255,0.82);z-index:2;
+}
+/* play button overlay */
+.reel-play{
+  position:absolute;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(201,171,135,0.22);
+  backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:2;
+}
+.reel-play svg{margin-left:2px}
+.reel-tag{
+  text-align:center;margin-top:10px;
+  font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--muted);
+}
+.portfolio-cta{padding:24px 22px 0}
+
+/* ─── PROCESS ────────────────────────────────────────── */
+.steps{margin-top:32px;display:flex;flex-direction:column}
+.step{
+  display:grid;grid-template-columns:44px 1fr;gap:16px;
+  padding:24px 0;border-bottom:1px solid var(--border);
+}
+.step:first-child{border-top:1px solid var(--border)}
+.step-n{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:700;
+  color:rgba(201,171,135,0.2);
+  line-height:1;
+}
+.step-t{
+  font-family:'Playfair Display',serif;
+  font-size:19px;font-weight:400;color:var(--cream);
+  margin-bottom:5px;
+}
+.step-d{font-size:13px;font-weight:300;line-height:1.7;color:var(--muted)}
+
+.belief-card{
+  background:var(--card);
+  border-radius:var(--r);
+  padding:28px 22px;
+  margin-top:32px;
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.belief-card::before{
+  content:'"';
+  position:absolute;top:-20px;right:16px;
+  font-family:'Playfair Display',serif;
+  font-size:120px;font-weight:700;
+  color:rgba(201,171,135,0.06);
+  line-height:1;
+  pointer-events:none;
+}
+.belief-quote{
+  font-family:'Playfair Display',serif;
+  font-size:19px;font-style:italic;font-weight:400;
+  color:var(--cream);line-height:1.55;
+  margin-bottom:20px;
+}
+.belief-quote em{color:var(--sand);font-style:normal}
+.belief-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.belief-list li{
+  font-size:13px;font-weight:300;line-height:1.6;color:var(--muted);
+  padding:9px 0;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.belief-list li::before{
+  content:'✦';color:var(--sand);font-size:8px;flex-shrink:0;margin-top:4px;
+}
+
+/* ─── ABOUT ──────────────────────────────────────────── */
+.about-visual{
+  width:100%;
+  aspect-ratio:4/3;
+  position:relative;overflow:hidden;
+  background:var(--card);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;
+}
+.about-visual img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:top;
+  filter:saturate(0.75) contrast(1.05);
+}
+.about-visual-fade{
+  position:absolute;bottom:0;left:0;right:0;height:40%;
+  background:linear-gradient(to top,var(--bg) 0%,transparent 100%);
+  pointer-events:none;
+}
+.location-tag{
+  position:absolute;bottom:20px;right:18px;z-index:2;
+  background:rgba(14,13,12,0.82);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:11px;font-weight:300;line-height:1.5;
+  color:var(--text);
+}
+.location-tag strong{
+  display:block;
+  font-family:'Playfair Display',serif;
+  font-size:13px;font-weight:400;color:var(--cream);
+  margin-bottom:2px;
+}
+.about-content{padding:32px 22px 80px}
+.about-intro{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-style:italic;font-weight:400;
+  color:var(--muted);margin-bottom:16px;line-height:1.5;
+}
+.about-p{
+  font-size:14px;font-weight:300;line-height:1.82;
+  color:var(--muted);margin-bottom:14px;
+}
+.about-p strong{color:var(--text);font-weight:400}
+.langs-wrap{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.langs-lbl{font-size:9px;letter-spacing:0.36em;text-transform:uppercase;color:var(--sand);margin-bottom:14px}
+.lang-chips{display:flex;flex-wrap:wrap;gap:8px}
+.lang-chip{
+  padding:7px 14px;border-radius:40px;
+  border:1px solid var(--border);
+  font-size:12px;font-weight:300;
+  color:var(--text);letter-spacing:0.04em;
+}
+
+/* ─── TESTIMONIAL / TRUST ────────────────────────────── */
+.trust{
+  background:var(--surface);
+  padding:48px 22px;
+  text-align:center;
+}
+.trust-quote{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-style:italic;font-weight:400;
+  color:var(--cream);line-height:1.55;
+  margin-bottom:20px;
+}
+.trust-quote::before{content:'"';color:var(--sand)}
+.trust-quote::after{content:'"';color:var(--sand)}
+.trust-author{font-size:12px;font-weight:300;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.trust-stars{color:var(--sand);font-size:14px;letter-spacing:4px;margin-bottom:12px}
+
+/* niches row */
+.niches{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:28px 22px;
+  border-top:1px solid var(--border);
+  justify-content:center;
+}
+.niche{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:40px;
+  padding:7px 14px;
+  font-size:11px;font-weight:300;
+  letter-spacing:0.1em;
+  color:var(--muted);
+}
+
+/* ─── CONTACT ────────────────────────────────────────── */
+.contact-section{
+  padding:64px 22px calc(80px + var(--safe-b));
+  background:var(--surface);
+  position:relative;overflow:hidden;
+}
+.contact-section::before{
+  content:'LERA';
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Playfair Display',serif;
+  font-size:50vw;font-weight:700;
+  color:rgba(201,171,135,0.025);
+  pointer-events:none;white-space:nowrap;
+  letter-spacing:0.1em;
+}
+.contact-section .h2{margin-bottom:8px}
+.contact-sub{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-style:italic;
+  color:var(--muted);
+  margin-bottom:36px;line-height:1.5;
+}
+.form{display:flex;flex-direction:column;gap:11px;position:relative;z-index:1}
+.form input,
+.form textarea,
+.form select{
+  width:100%;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  color:var(--cream);
+  padding:17px 16px;
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;/* prevents iOS zoom */
+  font-weight:300;
+  letter-spacing:0.03em;
+  outline:none;
+  -webkit-appearance:none;
+  border-radius:10px;
+  transition:border-color 0.22s;
+}
+.form input::placeholder,
+.form textarea::placeholder{color:rgba(237,232,224,0.22)}
+.form input:focus,
+.form textarea:focus,
+.form select:focus{border-color:rgba(201,171,135,0.5);background:rgba(255,255,255,0.06)}
+.form select option{background:#161412}
+.form textarea{resize:none;height:106px;line-height:1.6}
+.form-submit{
+  background:var(--sand);color:#0E0D0C;
+  border:none;
+  padding:19px 24px;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  border-radius:40px;width:100%;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity 0.18s,transform 0.15s;
+  margin-top:4px;
+}
+.form-submit:active{opacity:0.82;transform:scale(0.99)}
+
+.socials-row{
+  display:flex;justify-content:center;gap:16px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+.social{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  color:var(--muted);
+  -webkit-tap-highlight-color:transparent;
+  padding:6px;
+  transition:color 0.2s;
+}
+.social:active{color:var(--sand)}
+.social-ring{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.2s;
+}
+.social:active .social-ring{border-color:var(--sand)}
+.social-lbl{font-size:9px;letter-spacing:0.18em;text-transform:uppercase}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{
+  background:var(--bg);
+  border-top:1px solid var(--border);
+  padding:22px 22px calc(22px + var(--safe-b));
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:400;
+  letter-spacing:0.1em;color:rgba(237,232,224,0.2);
+  text-transform:uppercase;
+  display:block;margin-bottom:8px;
+}
+footer p{
+  font-size:11px;font-weight:300;
+  color:rgba(237,232,224,0.28);
+  letter-spacing:0.06em;line-height:1.65;
+}
+
+/* ─── REVEAL ANIMATION ───────────────────────────────── */
+.r{opacity:0;transform:translateY(18px);transition:opacity 0.6s ease,transform 0.6s ease}
+.r.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:0.07s}
+.d2{transition-delay:0.14s}
+.d3{transition-delay:0.22s}
+.d4{transition-delay:0.32s}
+
+/* ─── DESKTOP ────────────────────────────────────────── */
+@media(min-width:768px){
+  .nav{padding:16px 52px;gap:20px}
+  .hero{flex-direction:row;padding-top:0;min-height:100vh}
+  .hero-photo{
+    position:absolute;right:0;top:0;bottom:0;
+    width:46%;height:100%;max-height:none;
+    flex-direction:column;
+    align-items:center;justify-content:center;
+  }
+  .hero-photo::after{
+    background:
+      linear-gradient(to right, var(--bg) 0%, transparent 60%),
+      linear-gradient(to top, var(--bg) 0%, transparent 20%);
+    inset:0;height:100%;
+  }
+  .hero-body{padding:120px 60px 80px;width:58%;flex:none}
+  .hero-ctas{flex-direction:row}
+  .cta-primary,.cta-ghost{width:auto;display:inline-block;padding:17px 36px}
+  .s,.s-dark,.s-card{padding:96px 60px}
+  .what-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+  .pkg-cards{display:grid;grid-template-columns:repeat(3,1fr)}
+  .reel-track{padding:4px 60px 8px}
+  .portfolio .section-head,.swipe-hint,.portfolio-cta{padding-left:60px;padding-right:60px}
+  .process-cols{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+  .belief-card{margin-top:0}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr}
+  .about-visual{aspect-ratio:auto;height:100%;min-height:520px}
+  .about-content{padding:72px 60px}
+  .contact-section{padding:96px 60px calc(80px + var(--safe-b))}
+  .contact-section .form{max-width:500px}
+  .form-2col{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .bar{display:none}
+  footer{display:flex;justify-content:space-between;align-items:center;padding:24px 60px;text-align:left}
+  .footer-logo{display:inline;margin-bottom:0}
+  body{cursor:auto}
+  .trust{padding:64px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <span class="nav-logo">Lera<span>.</span></span>
+
+  <!-- Language switcher -->
+  <div class="lang-switcher" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang="en" data-name="English"   onclick="setLang('en')" aria-pressed="true"><span class="flag">🇬🇧</span></button>
+    <button class="lang-btn"        data-lang="fr" data-name="Français"  onclick="setLang('fr')" aria-pressed="false"><span class="flag">🇫🇷</span></button>
+    <button class="lang-btn"        data-lang="de" data-name="Deutsch"   onclick="setLang('de')" aria-pressed="false"><span class="flag">🇩🇪</span></button>
+    <button class="lang-btn"        data-lang="uk" data-name="Українська" onclick="setLang('uk')" aria-pressed="false"><span class="flag">🇺🇦</span></button>
+  </div>
+
+  <a href="#contact" class="nav-btn" data-i18n="nav.cta">Work with me</a>
+</nav>
+
+<!-- STICKY BAR (mobile) -->
+<div class="bar" id="bar">
+  <div class="bar-copy">
+    <span class="bar-title">Lera — UGC Creator</span>
+    <span class="bar-sub">Content ready in 48h</span>
+  </div>
+  <a href="#contact" class="bar-btn">Let's talk</a>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="home">
+  <div class="hero-photo">
+    <!-- ↓ Replace placeholder with: <img src="your-photo.jpg" alt="Lera"> -->
+    <div class="hero-photo-placeholder">
+      <span class="icon">📸</span>
+      <span class="hint">Add your photo here</span>
+    </div>
+    <!-- ↑ end placeholder -->
+    <div class="live-chip">
+      <span class="live-dot"></span>
+      Available for new projects
+    </div>
+    <!-- Rotating badge -->
+    <div class="badge">
+      <svg class="badge-ring" viewBox="0 0 72 72" width="72" height="72">
+        <defs><path id="c" d="M36,36 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0"/></defs>
+        <text font-size="7" font-family="DM Sans,sans-serif" letter-spacing="2" fill="#0E0D0C">
+          <textPath href="#c">UGC · REELS · CONTENT ·&nbsp;&nbsp;</textPath>
+        </text>
+      </svg>
+      <div class="badge-center">✦</div>
+    </div>
+  </div>
+
+  <div class="hero-body">
+    <p class="hero-kicker r" data-i18n="hero.kicker">UGC &amp; Reels Creator</p>
+    <h1 class="hero-h1 r d1">Hi, I'm<br><em>Lera</em></h1>
+    <p class="hero-tagline r d2" data-i18n="hero.tagline">Your content partner for service &amp; lifestyle brands</p>
+    <p class="hero-desc r d2" data-i18n="hero.desc">I create <strong>aesthetic, high-converting videos</strong> — from concept to final edit. So you can focus on running your brand.</p>
+    <div class="stats r d3">
+      <div class="stat">
+        <div class="stat-n">8k+</div>
+        <div class="stat-l" data-i18n="stats.followers">Followers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">98k+</div>
+        <div class="stat-l" data-i18n="stats.views">Monthly views</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">48h</div>
+        <div class="stat-l" data-i18n="stats.delivery">Delivery</div>
+      </div>
+    </div>
+    <div class="hero-ctas r d4">
+      <a href="#contact" class="cta-primary" data-i18n="nav.cta">Work with me</a>
+      <a href="#portfolio" class="cta-ghost" data-i18n="hero.seework">See my work</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">UGC Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Instagram Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Brand Strategy <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">On-site Filming <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Video Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Ready in 48h <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Geneva · Annecy · Remote <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">EN · FR · DE · UA <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">UGC Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Instagram Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Brand Strategy <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">On-site Filming <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Video Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Ready in 48h <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Geneva · Annecy · Remote <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">EN · FR · DE · UA <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- ══════════ SOCIAL PROOF ══════════ -->
+<div class="proof">
+  <div class="proof-item">
+    <span class="proof-n">8k+</span>
+    <span class="proof-l" data-i18n="stats.followers">Followers</span>
+  </div>
+  <div class="proof-sep"></div>
+  <div class="proof-item">
+    <span class="proof-n">98k+</span>
+    <span class="proof-l" data-i18n="stats.views">Monthly views</span>
+  </div>
+  <div class="proof-sep"></div>
+  <div class="proof-item">
+    <span class="proof-n">6+</span>
+    <span class="proof-l" data-i18n="stats.niches">Brand niches</span>
+  </div>
+  <div class="proof-sep"></div>
+  <div class="proof-item">
+    <span class="proof-n">4</span>
+    <span class="proof-l" data-i18n="stats.langs">Languages</span>
+  </div>
+</div>
+
+<!-- niches -->
+<div class="niches">
+  <span class="niche">Fashion</span>
+  <span class="niche">Skincare</span>
+  <span class="niche">Haircare</span>
+  <span class="niche">Jewellery</span>
+  <span class="niche">Lifestyle</span>
+  <span class="niche">Floral</span>
+  <span class="niche">Wellness</span>
+</div>
+
+<!-- ══════════ WHAT I DO ══════════ -->
+<section class="s" id="services">
+  <p class="label r" data-i18n="services.label">What I offer</p>
+  <h2 class="h2 r d1" data-i18n="services.title">Two ways to<br>work with <em>me</em></h2>
+  <p class="body r d2" data-i18n="services.intro">Strategy, filming, editing — all handled. You receive content that looks good <em>and</em> converts.</p>
+  <div class="what-grid">
+    <div class="what-card r d1">
+      <div class="what-num">01</div>
+      <h3 class="what-title" data-i18n="s1.title">Video Creation</h3>
+      <span class="what-chip">UGC &amp; Reels</span>
+      <p class="what-desc" data-i18n="s1.desc">Short-form videos that showcase your brand in a natural, aesthetic way. Delivered ready to post within 48h.</p>
+      <ul class="what-list">
+        <li data-i18n="s1.f1">UGC-style — relatable content that builds trust</li>
+        <li data-i18n="s1.f2">Marketing Reels — storytelling that sells</li>
+        <li data-i18n="s1.f3">Concept, filming &amp; editing included</li>
+        <li data-i18n="s1.f4">On-site (Geneva / Annecy) or remote</li>
+      </ul>
+    </div>
+    <div class="what-card r d2">
+      <div class="what-num">02</div>
+      <h3 class="what-title" data-i18n="s2.title">Content Partnership</h3>
+      <span class="what-chip" data-i18n="s2.chip">2+ Months</span>
+      <p class="what-desc" data-i18n="s2.desc">Full content management — off your plate entirely. I handle your Instagram from strategy to delivery.</p>
+      <ul class="what-list">
+        <li data-i18n="s2.f1">4–8 Reels per month</li>
+        <li data-i18n="s2.f2">Account audit &amp; content strategy</li>
+        <li data-i18n="s2.f3">Audience &amp; competitor analysis</li>
+        <li data-i18n="s2.f4">Planning, filming &amp; editing</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PACKAGES ══════════ -->
+<section class="s-dark" id="packages">
+  <p class="label r" data-i18n="pkg.label">Pricing</p>
+  <h2 class="h2 r d1" data-i18n="pkg.title">Choose your<br><em>package</em></h2>
+  <p class="body r d2" data-i18n="pkg.intro">Start with one video. Scale when you're ready. Price per video goes down with volume.</p>
+  <div class="pkg-cards">
+    <div class="pkg r d1">
+      <p class="pkg-name" data-i18n="pkg1.name">Starter</p>
+      <p class="pkg-from" data-i18n="pkg.from">from</p>
+      <p class="pkg-price">80€</p>
+      <span class="pkg-vids" data-i18n="pkg1.vids">📹 1 video</span>
+      <p class="pkg-desc" data-i18n="pkg1.desc">Test the waters. Discover my style and see exactly how it fits your brand before committing to more.</p>
+      <a href="#contact" class="pkg-cta" data-i18n="pkg.cta">Get started →</a>
+    </div>
+    <div class="pkg hot r d2">
+      <span class="pkg-best" data-i18n="pkg.best">Most popular</span>
+      <p class="pkg-name" data-i18n="pkg2.name">Growth</p>
+      <p class="pkg-from" data-i18n="pkg.from">from</p>
+      <p class="pkg-price">199€</p>
+      <span class="pkg-vids" data-i18n="pkg2.vids">📹 3 videos</span>
+      <p class="pkg-desc" data-i18n="pkg2.desc">Build momentum with consistent content. Test formats, messages, and find what resonates with your audience.</p>
+      <a href="#contact" class="pkg-cta" data-i18n="pkg.cta">Get started →</a>
+    </div>
+    <div class="pkg r d3">
+      <p class="pkg-name" data-i18n="pkg3.name">Consistency</p>
+      <p class="pkg-from" data-i18n="pkg.from">from</p>
+      <p class="pkg-price">319€</p>
+      <span class="pkg-vids" data-i18n="pkg3.vids">📹 5 videos</span>
+      <p class="pkg-desc" data-i18n="pkg3.desc">Build a strong, recognisable presence. The most cost-effective way to stay consistently visible.</p>
+      <a href="#contact" class="pkg-cta" data-i18n="pkg.cta">Get started →</a>
+    </div>
+  </div>
+  <p class="pkg-note r" data-i18n="pkg.note">Content Partnership pricing is custom — tailored to your brand, scope &amp; location.</p>
+</section>
+
+<!-- ══════════ PORTFOLIO ══════════ -->
+<section class="portfolio" id="portfolio">
+  <div class="section-head">
+    <p class="label r" data-i18n="portfolio.label">My Work</p>
+    <h2 class="h2 r d1" data-i18n="portfolio.title">Portfolio</h2>
+  </div>
+  <p class="swipe-hint r d2">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <span data-i18n="portfolio.swipe">Swipe to explore</span>
+  </p>
+  <div class="reel-track">
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-fashion">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-icon" style="opacity:0">·</span>
+          <span class="reel-label">Fashion</span>
+        </div>
+      </div>
+      <p class="reel-tag">Fashion</p>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-hair">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-label">Haircare</span>
+        </div>
+      </div>
+      <p class="reel-tag">Haircare</p>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-skin1">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-label">Skincare</span>
+        </div>
+      </div>
+      <p class="reel-tag">Skincare</p>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-skin2">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-label">Skincare</span>
+        </div>
+      </div>
+      <p class="reel-tag">Skincare</p>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-jewel">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-label">Jewellery</span>
+        </div>
+      </div>
+      <p class="reel-tag">Jewellery</p>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <div class="reel-screen n-floral">
+          <div class="reel-overlay"></div>
+          <div class="reel-play"><svg width="12" height="14" viewBox="0 0 12 14" fill="white"><path d="M0 0l12 7-12 7z"/></svg></div>
+          <span class="reel-label">Floral Studio</span>
+        </div>
+      </div>
+      <p class="reel-tag">Floral</p>
+    </div>
+  </div>
+  <div class="portfolio-cta">
+    <a href="#contact" class="cta-primary r" style="display:block;text-align:center" data-i18n="portfolio.cta">Book a collab →</a>
+  </div>
+</section>
+
+<!-- ══════════ TRUST ══════════ -->
+<div class="trust">
+  <div class="trust-stars">★★★★★</div>
+  <p class="trust-quote" data-i18n="trust.quote">
+    Working with Lera was seamless. She understood our brand instantly and delivered content that felt completely natural — our audience loved it.
+  </p>
+  <p class="trust-author" data-i18n="trust.author">— Partner brand, Skincare</p>
+</div>
+
+<!-- ══════════ PROCESS ══════════ -->
+<section class="s" id="process">
+  <div class="process-cols">
+    <div>
+      <p class="label r" data-i18n="process.label">How it works</p>
+      <h2 class="h2 r d1" data-i18n="process.title">From brief<br>to <em>publish</em></h2>
+      <p class="body r d2" data-i18n="process.intro">A clear, 4-step process — no surprises, no delays.</p>
+      <div class="steps">
+        <div class="step r d1">
+          <span class="step-n">1</span>
+          <div>
+            <h3 class="step-t" data-i18n="step1.t">Brand Review</h3>
+            <p class="step-d" data-i18n="step1.d">I study your brand, product, and audience so the content feels genuinely on-brand.</p>
+          </div>
+        </div>
+        <div class="step r d2">
+          <span class="step-n">2</span>
+          <div>
+            <h3 class="step-t" data-i18n="step2.t">Alignment</h3>
+            <p class="step-d" data-i18n="step2.d">We agree on goals, deliverables &amp; timeline. A 50% deposit secures your spot.</p>
+          </div>
+        </div>
+        <div class="step r d3">
+          <span class="step-n">3</span>
+          <div>
+            <h3 class="step-t" data-i18n="step3.t">Content Creation</h3>
+            <p class="step-d" data-i18n="step3.d">Filming (on-site or remote) + editing. Clean, aesthetic, ready to post.</p>
+          </div>
+        </div>
+        <div class="step r d4">
+          <span class="step-n">4</span>
+          <div>
+            <h3 class="step-t" data-i18n="step4.t">Delivery in 48h</h3>
+            <p class="step-d" data-i18n="step4.d">Final files delivered. Remaining 50% due before handover.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="belief-card r d2">
+        <p class="label" style="margin-bottom:16px" data-i18n="belief.label">My approach</p>
+        <blockquote class="belief-quote" data-i18n="belief.quote">
+          Quality over quantity.<br>
+          <em>Calm</em> visuals over aggressive marketing.<br>
+          Long-term collaboration over one-off content.
+        </blockquote>
+        <ul class="belief-list">
+          <li data-i18n="belief.b1">Every brand gets the attention I'd give my own</li>
+          <li data-i18n="belief.b2">Content that speaks to real needs, not just looks pretty</li>
+          <li data-i18n="belief.b3">Flexible, structured, always focused on your results</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <!-- ↓ Replace placeholder with: <img src="your-photo.jpg" alt="Lera"> -->
+      <span style="font-size:44px;opacity:0.15;position:relative;z-index:1">📷</span>
+      <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);opacity:0.5;position:relative;z-index:1">Your photo here</span>
+      <!-- ↑ end placeholder -->
+      <div class="about-visual-fade"></div>
+      <div class="location-tag">
+        <strong data-i18n="about.based">Based between</strong>
+        🇫🇷 France &amp; 🇨🇭 Switzerland<br>
+        <span style="font-size:10px;opacity:0.65" data-i18n="about.worldwide">Available worldwide</span>
+      </div>
+    </div>
+    <div class="about-content">
+      <p class="label r" data-i18n="about.label">About</p>
+      <h2 class="h2 r d1" data-i18n="about.title">Behind<br>the <em>lens</em></h2>
+      <p class="about-intro r d2" data-i18n="about.intro">Ukrainian-born. European-raised. Globally-minded.</p>
+      <p class="about-p r d2" data-i18n="about.p1">
+        I'm Ukrainian, and I've lived and worked across Europe — from Ukraine to Germany, and now between <strong>France and Switzerland</strong>. Every move taught me to adapt fast, stay curious, and build from scratch.
+      </p>
+      <p class="about-p r d3" data-i18n="about.p2">
+        That mindset shapes how I work. I approach each brand with <strong>genuine care and structure</strong> — treating your content like I would my own. No templates. No copy-paste. Just content that fits.
+      </p>
+      <div class="langs-wrap r d3">
+        <p class="langs-lbl" data-i18n="about.langslbl">Content available in</p>
+        <div class="lang-chips">
+          <span class="lang-chip">🇬🇧 English</span>
+          <span class="lang-chip">🇫🇷 French</span>
+          <span class="lang-chip">🇩🇪 German</span>
+          <span class="lang-chip">🇺🇦 Ukrainian</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section class="contact-section" id="contact">
+  <p class="label" data-i18n="contact.label">Let's create together</p>
+  <h2 class="h2" data-i18n="contact.title">Ready to grow<br>your brand <em>with me?</em></h2>
+  <p class="contact-sub" data-i18n="contact.sub">Tell me about your project — I reply within 24h.</p>
+
+  <form class="form" onsubmit="handleSubmit(event)">
+    <div class="form-2col">
+      <input type="text" placeholder="Your name" required autocomplete="name">
+      <input type="email" placeholder="Email address" required autocomplete="email">
+    </div>
+    <input type="text" placeholder="Brand / Company name" autocomplete="organization">
+    <select>
+      <option value="" disabled selected>What are you interested in?</option>
+      <option>Starter Package — 1 video (from 80€)</option>
+      <option>Growth Package — 3 videos (from 199€)</option>
+      <option>Consistency Package — 5 videos (from 319€)</option>
+      <option>Content Partnership — 2+ months</option>
+      <option>Not sure yet — let's chat</option>
+    </select>
+    <textarea placeholder="Tell me about your brand, your goals, and the kind of content you need..."></textarea>
+    <button type="submit" class="form-submit">Send message ✦</button>
+  </form>
+
+  <div class="socials-row">
+    <a href="https://instagram.com/leraugc" target="_blank" rel="noopener" class="social">
+      <div class="social-ring">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <span class="social-lbl">Instagram</span>
+    </a>
+    <a href="https://tiktok.com/@leraugc" target="_blank" rel="noopener" class="social">
+      <div class="social-ring">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.13 8.13 0 004.76 1.52V6.76a4.85 4.85 0 01-1-.07z"/>
+        </svg>
+      </div>
+      <span class="social-lbl">TikTok</span>
+    </a>
+    <a href="/cdn-cgi/l/email-protection#573f323b3b38173b3225362230347934383a" class="social">
+      <div class="social-ring">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="social-lbl">Email</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Lera.</a>
+  <p>© 2025 Lera — UGC &amp; Reels Creator<br>Geneva · Annecy · Remote worldwide</p>
+</footer>
+
+<script>
+/* ── Nav solid on scroll ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 30);
+}, { passive: true });
+
+/* ── Sticky bar: show after hero, hide at contact ── */
+const bar      = document.getElementById('bar');
+const heroEl   = document.getElementById('home');
+const contactEl= document.getElementById('contact');
+
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.target === heroEl)    bar.classList.toggle('show', !e.isIntersecting);
+    if (e.target === contactEl && e.isIntersecting) bar.classList.remove('show');
+  });
+}, { threshold: 0.15 });
+barObs.observe(heroEl);
+barObs.observe(contactEl);
+
+/* ── Scroll reveal ── */
+const rObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); rObs.unobserve(e.target); }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -16px 0px' });
+document.querySelectorAll('.r').forEach(el => rObs.observe(el));
+
+/* Hero reveals immediately */
+setTimeout(() => {
+  document.querySelectorAll('.hero .r').forEach(el => el.classList.add('in'));
+}, 100);
+
+/* ── Form submit ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Sent! I\'ll reply within 24h';
+  btn.style.background = '#7A9E72';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    e.target.reset();
+  }, 4500);
+}
+
+/* ══════════════════════════════════════════════
+   LANGUAGE SWITCHER
+══════════════════════════════════════════════ */
+const translations = {
+  en: {
+    'nav.cta':        'Work with me',
+    'hero.kicker':    'UGC & Reels Creator',
+    'hero.tagline':   'Your content partner for service & lifestyle brands',
+    'hero.desc':      'I create <strong>aesthetic, high-converting videos</strong> — from concept to final edit. So you can focus on running your brand.',
+    'hero.seework':   'See my work',
+    'stats.followers':'Followers',
+    'stats.views':    'Monthly views',
+    'stats.delivery': 'Delivery',
+    'stats.niches':   'Brand niches',
+    'stats.langs':    'Languages',
+    'services.label': 'What I offer',
+    'services.title': 'Two ways to<br>work with <em>me</em>',
+    'services.intro': 'Strategy, filming, editing — all handled. You receive content that looks good <em>and</em> converts.',
+    's1.title':       'Video Creation',
+    's1.desc':        'Short-form videos that showcase your brand in a natural, aesthetic way. Delivered ready to post within 48h.',
+    's1.f1':          'UGC-style — relatable content that builds trust',
+    's1.f2':          'Marketing Reels — storytelling that sells',
+    's1.f3':          'Concept, filming & editing included',
+    's1.f4':          'On-site (Geneva / Annecy) or remote',
+    's2.title':       'Content Partnership',
+    's2.chip':        '2+ Months',
+    's2.desc':        'Full content management — off your plate entirely. I handle your Instagram from strategy to delivery.',
+    's2.f1':          '4–8 Reels per month',
+    's2.f2':          'Account audit & content strategy',
+    's2.f3':          'Audience & competitor analysis',
+    's2.f4':          'Planning, filming & editing',
+    'pkg.label':      'Pricing',
+    'pkg.title':      'Choose your<br><em>package</em>',
+    'pkg.intro':      "Start with one video. Scale when you're ready. Price per video goes down with volume.",
+    'pkg.from':       'from',
+    'pkg.best':       'Most popular',
+    'pkg.cta':        'Get started →',
+    'pkg1.name':      'Starter',
+    'pkg1.vids':      '📹 1 video',
+    'pkg1.desc':      'Test the waters. Discover my style and see exactly how it fits your brand before committing to more.',
+    'pkg2.name':      'Growth',
+    'pkg2.vids':      '📹 3 videos',
+    'pkg2.desc':      'Build momentum with consistent content. Test formats, messages, and find what resonates with your audience.',
+    'pkg3.name':      'Consistency',
+    'pkg3.vids':      '📹 5 videos',
+    'pkg3.desc':      'Build a strong, recognisable presence. The most cost-effective way to stay consistently visible.',
+    'pkg.note':       'Content Partnership pricing is custom — tailored to your brand, scope & location.',
+    'portfolio.label':'My Work',
+    'portfolio.title':'Portfolio',
+    'portfolio.swipe':'Swipe to explore',
+    'portfolio.cta':  'Book a collab →',
+    'trust.quote':    'Working with Lera was seamless. She understood our brand instantly and delivered content that felt completely natural — our audience loved it.',
+    'trust.author':   '— Partner brand, Skincare',
+    'process.label':  'How it works',
+    'process.title':  'From brief<br>to <em>publish</em>',
+    'process.intro':  'A clear, 4-step process — no surprises, no delays.',
+    'step1.t':        'Brand Review',
+    'step1.d':        'I study your brand, product, and audience so the content feels genuinely on-brand.',
+    'step2.t':        'Alignment',
+    'step2.d':        'We agree on goals, deliverables & timeline. A 50% deposit secures your spot.',
+    'step3.t':        'Content Creation',
+    'step3.d':        'Filming (on-site or remote) + editing. Clean, aesthetic, ready to post.',
+    'step4.t':        'Delivery in 48h',
+    'step4.d':        'Final files delivered. Remaining 50% due before handover.',
+    'belief.label':   'My approach',
+    'belief.quote':   'Quality over quantity.<br><em>Calm</em> visuals over aggressive marketing.<br>Long-term collaboration over one-off content.',
+    'belief.b1':      "Every brand gets the attention I'd give my own",
+    'belief.b2':      'Content that speaks to real needs, not just looks pretty',
+    'belief.b3':      'Flexible, structured, always focused on your results',
+    'about.label':    'About',
+    'about.title':    'Behind<br>the <em>lens</em>',
+    'about.intro':    'Ukrainian-born. European-raised. Globally-minded.',
+    'about.p1':       "I'm Ukrainian, and I've lived and worked across Europe — from Ukraine to Germany, and now between <strong>France and Switzerland</strong>. Every move taught me to adapt fast, stay curious, and build from scratch.",
+    'about.p2':       'That mindset shapes how I work. I approach each brand with <strong>genuine care and structure</strong> — treating your content like I would my own. No templates. No copy-paste. Just content that fits.',
+    'about.langslbl': 'Content available in',
+    'about.based':    'Based between',
+    'about.worldwide':'Available worldwide',
+    'contact.label':  "Let's create together",
+    'contact.title':  'Ready to grow<br>your brand <em>with me?</em>',
+    'contact.sub':    'Tell me about your project — I reply within 24h.',
+  },
+
+  fr: {
+    'nav.cta':        'Travaillons ensemble',
+    'hero.kicker':    'Créatrice UGC & Reels',
+    'hero.tagline':   'Votre partenaire contenu pour les marques lifestyle & service',
+    'hero.desc':      'Je crée des <strong>vidéos esthétiques et percutantes</strong> — du concept au montage final. Pour que vous puissiez vous concentrer sur votre activité.',
+    'hero.seework':   'Voir mon travail',
+    'stats.followers':'Abonnés',
+    'stats.views':    'Vues par mois',
+    'stats.delivery': 'Livraison',
+    'stats.niches':   'Secteurs couverts',
+    'stats.langs':    'Langues',
+    'services.label': 'Ce que je propose',
+    'services.title': 'Deux façons de<br>travailler avec <em>moi</em>',
+    'services.intro': 'Stratégie, tournage, montage — tout est géré. Vous recevez du contenu qui est beau <em>et</em> qui convertit.',
+    's1.title':       'Création vidéo',
+    's1.desc':        'Des vidéos courtes qui mettent en valeur votre marque de façon naturelle et esthétique. Livrées prêtes à publier sous 48h.',
+    's1.f1':          'Style UGC — contenu authentique qui crée la confiance',
+    's1.f2':          'Reels marketing — storytelling qui vend',
+    's1.f3':          'Concept, tournage & montage inclus',
+    's1.f4':          'Sur site (Genève / Annecy) ou à distance',
+    's2.title':       'Partenariat contenu',
+    's2.chip':        '2+ mois',
+    's2.desc':        'Gestion complète du contenu — je m'occupe de tout, de la stratégie à la publication sur Instagram.',
+    's2.f1':          '4 à 8 Reels par mois',
+    's2.f2':          'Audit de compte & stratégie de contenu',
+    's2.f3':          'Analyse de l'audience & des concurrents',
+    's2.f4':          'Planification, tournage & montage',
+    'pkg.label':      'Tarifs',
+    'pkg.title':      'Choisissez votre<br><em>formule</em>',
+    'pkg.intro':      'Commencez avec une vidéo. Montez en puissance quand vous êtes prêt. Le prix par vidéo diminue avec le volume.',
+    'pkg.from':       'à partir de',
+    'pkg.best':       'Le plus populaire',
+    'pkg.cta':        'Démarrer →',
+    'pkg1.name':      'Starter',
+    'pkg1.vids':      '📹 1 vidéo',
+    'pkg1.desc':      'Testez mon style et voyez comment il s'adapte à votre marque avant de vous engager davantage.',
+    'pkg2.name':      'Croissance',
+    'pkg2.vids':      '📹 3 vidéos',
+    'pkg2.desc':      'Créez de l'élan avec du contenu régulier. Testez les formats et trouvez ce qui résonne avec votre audience.',
+    'pkg3.name':      'Régularité',
+    'pkg3.vids':      '📹 5 vidéos',
+    'pkg3.desc':      'Construisez une présence forte et reconnaissable. La solution la plus rentable pour rester visible en permanence.',
+    'pkg.note':       'Le tarif du Partenariat contenu est personnalisé selon votre marque, le périmètre & la localisation.',
+    'portfolio.label':'Mon travail',
+    'portfolio.title':'Portfolio',
+    'portfolio.swipe':'Faites défiler pour explorer',
+    'portfolio.cta':  'Réserver une collaboration →',
+    'trust.quote':    'Travailler avec Lera a été fluide et naturel. Elle a compris notre marque immédiatement et livré un contenu qui sonnait complètement authentique — notre audience a adoré.',
+    'trust.author':   '— Marque partenaire, Skincare',
+    'process.label':  'Comment ça marche',
+    'process.title':  'Du brief<br>à la <em>publication</em>',
+    'process.intro':  'Un processus clair en 4 étapes — sans surprise, sans délai.',
+    'step1.t':        'Analyse de la marque',
+    'step1.d':        'J'étudie votre marque, produit et audience pour que le contenu soit vraiment dans votre ADN.',
+    'step2.t':        'Alignement',
+    'step2.d':        'Nous validons les objectifs, livrables & le calendrier. Un acompte de 50% sécurise votre projet.',
+    'step3.t':        'Création du contenu',
+    'step3.d':        'Tournage (sur site ou à distance) + montage. Propre, esthétique, prêt à publier.',
+    'step4.t':        'Livraison en 48h',
+    'step4.d':        'Fichiers finaux livrés. Le solde de 50% est dû avant la remise.',
+    'belief.label':   'Mon approche',
+    'belief.quote':   'La qualité plutôt que la quantité.<br>Des visuels <em>apaisants</em> plutôt qu'un marketing agressif.<br>Une collaboration durable plutôt qu'un contenu ponctuel.',
+    'belief.b1':      "Chaque marque reçoit l'attention que je donnerais à la mienne",
+    'belief.b2':      'Du contenu qui répond aux vrais besoins, pas que du beau',
+    'belief.b3':      'Flexible, structurée, toujours axée sur vos résultats',
+    'about.label':    'À propos',
+    'about.title':    'Derrière<br>l'<em>objectif</em>',
+    'about.intro':    'Née en Ukraine. Élevée en Europe. Ouverte sur le monde.',
+    'about.p1':       "Je suis ukrainienne et j'ai vécu et travaillé dans plusieurs pays — de l'Ukraine à l'Allemagne, et maintenant entre <strong>la France et la Suisse</strong>. Chaque déménagement m'a appris à m'adapter vite, rester curieuse et repartir de zéro.",
+    'about.p2':       "Cette façon de penser guide mon travail. J'aborde chaque marque avec <strong>soin et structure</strong> — en traitant votre contenu comme le mien. Pas de templates. Pas de copier-coller. Juste du contenu qui vous ressemble.",
+    'about.langslbl': 'Contenu disponible en',
+    'about.based':    'Basée entre',
+    'about.worldwide':'Disponible dans le monde entier',
+    'contact.label':  'Créons ensemble',
+    'contact.title':  'Prête à faire grandir<br>votre marque <em>avec moi ?</em>',
+    'contact.sub':    'Parlez-moi de votre projet — je réponds sous 24h.',
+  },
+
+  de: {
+    'nav.cta':        'Zusammenarbeiten',
+    'hero.kicker':    'UGC & Reels Creatorin',
+    'hero.tagline':   'Ihre Content-Partnerin für Service- und Lifestyle-Marken',
+    'hero.desc':      'Ich erstelle <strong>ästhetische, conversion-starke Videos</strong> — vom Konzept bis zum finalen Schnitt. Damit Sie sich auf Ihr Business konzentrieren können.',
+    'hero.seework':   'Meine Arbeit ansehen',
+    'stats.followers':'Follower',
+    'stats.views':    'Monatliche Aufrufe',
+    'stats.delivery': 'Lieferzeit',
+    'stats.niches':   'Branchen',
+    'stats.langs':    'Sprachen',
+    'services.label': 'Was ich anbiete',
+    'services.title': 'Zwei Wege,<br>mit <em>mir</em> zusammenzuarbeiten',
+    'services.intro': 'Strategie, Dreh, Schnitt — alles erledigt. Sie erhalten Content, der gut aussieht <em>und</em> konvertiert.',
+    's1.title':       'Videoproduktion',
+    's1.desc':        'Kurzvideos, die Ihre Marke natürlich und ästhetisch präsentieren. Innerhalb von 48h bereit zur Veröffentlichung.',
+    's1.f1':          'UGC-Stil — authentischer Content, der Vertrauen schafft',
+    's1.f2':          'Marketing Reels — Storytelling, das verkauft',
+    's1.f3':          'Konzept, Dreh & Schnitt inklusive',
+    's1.f4':          'Vor Ort (Genf / Annecy) oder remote',
+    's2.title':       'Content-Partnerschaft',
+    's2.chip':        '2+ Monate',
+    's2.desc':        'Vollständige Content-Verwaltung — komplett von Ihrem Tisch. Ich kümmere mich um Ihren Instagram-Account von der Strategie bis zur Auslieferung.',
+    's2.f1':          '4–8 Reels pro Monat',
+    's2.f2':          'Account-Audit & Content-Strategie',
+    's2.f3':          'Zielgruppen- & Wettbewerbsanalyse',
+    's2.f4':          'Planung, Dreh & Schnitt',
+    'pkg.label':      'Preise',
+    'pkg.title':      'Ihr<br><em>Paket</em> auswählen',
+    'pkg.intro':      'Starten Sie mit einem Video. Skalieren Sie, wenn Sie bereit sind. Der Preis pro Video sinkt mit der Menge.',
+    'pkg.from':       'ab',
+    'pkg.best':       'Am beliebtesten',
+    'pkg.cta':        'Jetzt starten →',
+    'pkg1.name':      'Starter',
+    'pkg1.vids':      '📹 1 Video',
+    'pkg1.desc':      'Testen Sie meinen Stil und sehen Sie, wie er zu Ihrer Marke passt — bevor Sie sich zu mehr verpflichten.',
+    'pkg2.name':      'Wachstum',
+    'pkg2.vids':      '📹 3 Videos',
+    'pkg2.desc':      'Aufbau von Schwung durch konsistenten Content. Formate testen und herausfinden, was bei Ihrer Zielgruppe ankommt.',
+    'pkg3.name':      'Kontinuität',
+    'pkg3.vids':      '📹 5 Videos',
+    'pkg3.desc':      'Aufbau einer starken, wiedererkennbaren Präsenz. Die kosteneffizienteste Methode, dauerhaft sichtbar zu bleiben.',
+    'pkg.note':       'Der Preis der Content-Partnerschaft ist individuell — abgestimmt auf Ihre Marke, den Umfang & Standort.',
+    'portfolio.label':'Meine Arbeit',
+    'portfolio.title':'Portfolio',
+    'portfolio.swipe':'Wischen zum Erkunden',
+    'portfolio.cta':  'Zusammenarbeit buchen →',
+    'trust.quote':    'Die Zusammenarbeit mit Lera war reibungslos. Sie hat unsere Marke sofort verstanden und Content geliefert, der sich völlig natürlich angefühlt hat — unser Publikum liebte es.',
+    'trust.author':   '— Partner-Marke, Skincare',
+    'process.label':  'So funktioniert es',
+    'process.title':  'Vom Briefing<br>zur <em>Veröffentlichung</em>',
+    'process.intro':  'Ein klarer 4-Schritte-Prozess — keine Überraschungen, keine Verzögerungen.',
+    'step1.t':        'Marken-Analyse',
+    'step1.d':        'Ich analysiere Ihre Marke, Ihr Produkt und Ihre Zielgruppe, damit der Content wirklich zu Ihnen passt.',
+    'step2.t':        'Abstimmung',
+    'step2.d':        'Wir einigen uns auf Ziele, Lieferumfang & Zeitplan. Eine Anzahlung von 50% sichert Ihren Platz.',
+    'step3.t':        'Content-Produktion',
+    'step3.d':        'Dreh (vor Ort oder remote) + Schnitt. Sauber, ästhetisch, bereit zur Veröffentlichung.',
+    'step4.t':        'Lieferung in 48h',
+    'step4.d':        'Finale Dateien geliefert. Die restlichen 50% sind vor der Übergabe fällig.',
+    'belief.label':   'Mein Ansatz',
+    'belief.quote':   'Qualität statt Quantität.<br><em>Ruhige</em> Ästhetik statt aggressivem Marketing.<br>Langfristige Zusammenarbeit statt einmaligem Content.',
+    'belief.b1':      'Jede Marke bekommt die Aufmerksamkeit, die ich meiner eigenen geben würde',
+    'belief.b2':      'Content, der echte Bedürfnisse anspricht — nicht nur gut aussieht',
+    'belief.b3':      'Flexibel, strukturiert, immer auf Ihre Ergebnisse fokussiert',
+    'about.label':    'Über mich',
+    'about.title':    'Hinter<br>der <em>Kamera</em>',
+    'about.intro':    'In der Ukraine geboren. In Europa aufgewachsen. Global denkend.',
+    'about.p1':       'Ich bin Ukrainerin und habe in verschiedenen Ländern gelebt und gearbeitet — von der Ukraine über Deutschland, und jetzt zwischen <strong>Frankreich und der Schweiz</strong>. Jeder Umzug hat mich gelehrt, mich schnell anzupassen, neugierig zu bleiben und von vorne anzufangen.',
+    'about.p2':       'Diese Denkweise prägt meine Arbeit. Ich gehe an jede Marke mit <strong>echtem Engagement und Struktur</strong> heran — Ihren Content behandle ich wie meinen eigenen. Keine Templates. Kein Copy-Paste. Nur Content, der wirklich passt.',
+    'about.langslbl': 'Content verfügbar auf',
+    'about.based':    'Ansässig zwischen',
+    'about.worldwide':'Weltweit verfügbar',
+    'contact.label':  'Lass uns zusammen kreieren',
+    'contact.title':  'Bereit, Ihre Marke<br><em>mit mir</em> zu wachsen?',
+    'contact.sub':    'Erzählen Sie mir von Ihrem Projekt — ich antworte innerhalb von 24h.',
+  },
+
+  uk: {
+    'nav.cta':        'Працювати зі мною',
+    'hero.kicker':    'UGC & Reels Креатор',
+    'hero.tagline':   'Ваш контент-партнер для сервісних та лайфстайл-брендів',
+    'hero.desc':      'Я створюю <strong>естетичні, конверсійні відео</strong> — від концепту до фінального монтажу. Щоб ви могли зосередитись на своєму бізнесі.',
+    'hero.seework':   'Переглянути роботи',
+    'stats.followers':'Підписники',
+    'stats.views':    'Перегляди на місяць',
+    'stats.delivery': 'Термін здачі',
+    'stats.niches':   'Ніші брендів',
+    'stats.langs':    'Мови',
+    'services.label': 'Що я пропоную',
+    'services.title': 'Два способи<br>співпраці зі <em>мною</em>',
+    'services.intro': 'Стратегія, зйомка, монтаж — все під контролем. Ви отримуєте контент, який виглядає добре <em>і</em> конвертує.',
+    's1.title':       'Створення відео',
+    's1.desc':        'Короткі відео, що презентують ваш бренд природно та естетично. Готові до публікації впродовж 48 годин.',
+    's1.f1':          'UGC-стиль — справжній контент, що викликає довіру',
+    's1.f2':          'Маркетингові Reels — сторітелінг, що продає',
+    's1.f3':          'Концепт, зйомка & монтаж включено',
+    's1.f4':          'На місці (Женева / Анесі) або дистанційно',
+    's2.title':       'Контент-партнерство',
+    's2.chip':        '2+ місяці',
+    's2.desc':        'Повне управління контентом — знято з ваших плечей. Я веду ваш Instagram від стратегії до публікації.',
+    's2.f1':          '4–8 Reels на місяць',
+    's2.f2':          'Аудит акаунту & контент-стратегія',
+    's2.f3':          'Аналіз аудиторії & конкурентів',
+    's2.f4':          'Планування, зйомка & монтаж',
+    'pkg.label':      'Вартість',
+    'pkg.title':      'Оберіть свій<br><em>пакет</em>',
+    'pkg.intro':      'Почніть з одного відео. Масштабуйтеся, коли будете готові. Ціна за відео знижується з обсягом.',
+    'pkg.from':       'від',
+    'pkg.best':       'Найпопулярніший',
+    'pkg.cta':        'Розпочати →',
+    'pkg1.name':      'Старт',
+    'pkg1.vids':      '📹 1 відео',
+    'pkg1.desc':      'Протестуйте мій стиль і подивіться, як він пасує вашому бренду, перш ніж вкладати більше.',
+    'pkg2.name':      'Зростання',
+    'pkg2.vids':      '📹 3 відео',
+    'pkg2.desc':      'Набирайте обертів із регулярним контентом. Тестуйте формати та знаходьте те, що резонує з аудиторією.',
+    'pkg3.name':      'Стабільність',
+    'pkg3.vids':      '📹 5 відео',
+    'pkg3.desc':      'Побудуйте сильну, впізнавану присутність. Найбільш рентабельний спосіб залишатися постійно видимим.',
+    'pkg.note':       'Вартість контент-партнерства індивідуальна — залежить від вашого бренду, обсягу & локації.',
+    'portfolio.label':'Мої роботи',
+    'portfolio.title':'Портфоліо',
+    'portfolio.swipe':'Гортайте, щоб переглянути',
+    'portfolio.cta':  'Замовити співпрацю →',
+    'trust.quote':    'Співпраця з Лерою була бездоганною. Вона миттєво зрозуміла наш бренд і створила контент, який звучав цілком природно — наша аудиторія була в захваті.',
+    'trust.author':   '— Бренд-партнер, Skincare',
+    'process.label':  'Як це працює',
+    'process.title':  'Від брифу<br>до <em>публікації</em>',
+    'process.intro':  'Чіткий процес із 4 кроків — без сюрпризів, без затримок.',
+    'step1.t':        'Аналіз бренду',
+    'step1.d':        'Я вивчаю ваш бренд, продукт та аудиторію, щоб контент відчувався справді вашим.',
+    'step2.t':        'Узгодження',
+    'step2.d':        'Погоджуємо цілі, обсяг & терміни. Завдаток 50% підтверджує замовлення.',
+    'step3.t':        'Створення контенту',
+    'step3.d':        'Зйомка (на місці або дистанційно) + монтаж. Чисто, естетично, готово до публікації.',
+    'step4.t':        'Здача за 48 годин',
+    'step4.d':        'Фінальні файли доставлені. Залишок 50% сплачується до передачі матеріалів.',
+    'belief.label':   'Моя філософія',
+    'belief.quote':   'Якість понад кількість.<br><em>Спокійна</em> естетика понад агресивний маркетинг.<br>Довготривала співпраця понад разовий контент.',
+    'belief.b1':      'Кожен бренд отримує увагу, яку я б приділила своєму',
+    'belief.b2':      'Контент, що відповідає справжнім потребам, а не тільки красиво виглядає',
+    'belief.b3':      'Гнучка, структурована, завжди зосереджена на ваших результатах',
+    'about.label':    'Про мене',
+    'about.title':    'За<br><em>камерою</em>',
+    'about.intro':    'Народилась в Україні. Виросла в Європі. Мислю глобально.',
+    'about.p1':       'Я українка, і я жила та працювала в різних країнах — від України до Німеччини, і тепер між <strong>Францією та Швейцарією</strong>. Кожен переїзд навчив мене швидко адаптуватись, залишатися допитливою та будувати все з нуля.',
+    'about.p2':       'Цей підхід визначає мою роботу. До кожного бренду я ставлюся з <strong>щирою увагою та структурою</strong> — ваш контент для мене як власний. Жодних шаблонів. Жодного копіювання. Лише контент, що підходить саме вам.',
+    'about.langslbl': 'Контент доступний мовами',
+    'about.based':    'Живу між',
+    'about.worldwide':'Доступна по всьому світу',
+    'contact.label':  'Створимо разом',
+    'contact.title':  'Готові розвивати<br>свій бренд <em>зі мною?</em>',
+    'contact.sub':    'Розкажіть про ваш проєкт — відповідаю впродовж 24 годин.',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+
+  /* Update button states */
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const active = btn.dataset.lang === lang;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active);
+  });
+
+  /* Update html lang attribute */
+  document.documentElement.lang = lang;
+
+  const t = translations[lang];
+
+  /* Translate all tagged elements */
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) {
+      el.innerHTML = t[key];
+    }
+  });
+
+  /* Animate a subtle flash to signal language change */
+  document.body.style.transition = 'opacity 0.15s';
+  document.body.style.opacity = '0.7';
+  setTimeout(() => { document.body.style.opacity = '1'; }, 150);
+}
+</script>
