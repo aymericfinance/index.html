@@ -837,7 +837,9 @@ footer p{
 }
 
 /* ─── REVEAL ANIMATION ───────────────────────────────── */
-.r{opacity:0;transform:translateY(18px);transition:opacity 0.6s ease,transform 0.6s ease}
+/* Start visible by default, JS will add the animation */
+.r{opacity:1;transform:translateY(0);transition:opacity 0.6s ease,transform 0.6s ease}
+.r.will-animate{opacity:0;transform:translateY(18px)}
 .r.in{opacity:1;transform:translateY(0)}
 .d1{transition-delay:0.07s}
 .d2{transition-delay:0.14s}
@@ -1349,6 +1351,9 @@ barObs.observe(heroEl);
 barObs.observe(contactEl);
 
 /* ── Scroll reveal ── */
+/* First, mark all elements as "will animate" (hides them) */
+document.querySelectorAll('.r').forEach(el => el.classList.add('will-animate'));
+
 const rObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); rObs.unobserve(e.target); }
@@ -1359,7 +1364,12 @@ document.querySelectorAll('.r').forEach(el => rObs.observe(el));
 /* Hero reveals immediately */
 setTimeout(() => {
   document.querySelectorAll('.hero .r').forEach(el => el.classList.add('in'));
-}, 100);
+}, 80);
+
+/* Safety net: reveal ALL after 1.2s — guarantees content is always visible */
+setTimeout(() => {
+  document.querySelectorAll('.r').forEach(el => el.classList.add('in'));
+}, 1200);
 
 /* ── Form submit ── */
 function handleSubmit(e) {
